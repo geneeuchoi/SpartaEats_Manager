@@ -17,8 +17,8 @@ public class Like {
 	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id", nullable = false)
-	private Order order;
+	@JoinColumn(name = "review_id", nullable = false)
+	private Review review;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id", nullable = false)
