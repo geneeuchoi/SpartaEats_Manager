@@ -18,8 +18,8 @@ public class Pick {
 	private Long Id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private Manager Manager;
+	@JoinColumn(name = "customer_id")
+	private Customer Customer;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "store_id")
