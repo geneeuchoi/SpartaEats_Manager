@@ -13,8 +13,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import like.heocholi.spartaeats.constants.RestaurantType;
+import lombok.Getter;
 
 @Entity
+@Getter
 @Table(name = "stores")
 public class Store extends Timestamped{
 	@Id
