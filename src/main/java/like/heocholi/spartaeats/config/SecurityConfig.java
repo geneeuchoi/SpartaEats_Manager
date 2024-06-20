@@ -2,6 +2,7 @@ package like.heocholi.spartaeats.config;
 
 import like.heocholi.spartaeats.jwt.JwtAuthenticationFilter;
 import like.heocholi.spartaeats.jwt.JwtAuthorizationFilter;
+import like.heocholi.spartaeats.jwt.JwtExceptionFilter;
 import like.heocholi.spartaeats.jwt.JwtUtil;
 import like.heocholi.spartaeats.repository.ManagerRepository;
 import like.heocholi.spartaeats.security.UserDetailsServiceImpl;
@@ -54,6 +55,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JwtExceptionFilter jwtExceptionFilter(){
+        return new JwtExceptionFilter();
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable());
 
@@ -72,6 +78,7 @@ public class SecurityConfig {
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtExceptionFilter(), JwtAuthorizationFilter.class);
 
         return http.build();
     }

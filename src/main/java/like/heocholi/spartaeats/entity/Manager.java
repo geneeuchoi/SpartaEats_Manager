@@ -1,19 +1,13 @@
 package like.heocholi.spartaeats.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import like.heocholi.spartaeats.constants.UserRole;
 import like.heocholi.spartaeats.constants.UserStatus;
 import like.heocholi.spartaeats.dto.SignupRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,14 +30,14 @@ public class Manager extends Timestamped{
 	@Enumerated(value = EnumType.STRING)
 	private UserRole role;
 	
-	@OneToOne(mappedBy = "manager", fetch = FetchType.LAZY)
-	private Store store;
+	@OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
+	private List<Store> stores;
 
 	public Manager(SignupRequestDto requestDto, String encodedPassword) {
 		this.userId = requestDto.getUserId();
 		this.password = encodedPassword;
 		this.userStatus = UserStatus.ACTIVE;
-		this.role = UserRole.ROLE_CUSTOMER;
+		this.role = UserRole.ROLE_MANAGER;
 	}
 
 	public void saveRefreshToken(String refreshToken){
@@ -55,5 +49,13 @@ public class Manager extends Timestamped{
 			return true;
 		}
 		return false;
+	}
+
+	public void withdrawManager() {
+		this.userStatus = UserStatus.DEACTIVATE;
+	}
+
+	public void removeRefreshToken() {
+		this.refreshToken = "";
 	}
 }
