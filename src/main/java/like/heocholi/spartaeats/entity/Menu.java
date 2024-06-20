@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Table(name = "menus")
 @NoArgsConstructor
-public class Menu {
+public class Menu extends Timestamped{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

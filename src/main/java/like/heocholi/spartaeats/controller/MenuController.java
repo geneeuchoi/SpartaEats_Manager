@@ -4,10 +4,11 @@ import like.heocholi.spartaeats.dto.ResponseMessage;
 import like.heocholi.spartaeats.dto.menu.MenuAddRequestDto;
 import like.heocholi.spartaeats.dto.menu.MenuResponseDto;
 import like.heocholi.spartaeats.dto.menu.MenuUpdateRequestDto;
-import like.heocholi.spartaeats.entity.Menu;
+import like.heocholi.spartaeats.security.UserDetailsImpl;
 import like.heocholi.spartaeats.service.MenuService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class MenuController {
     //메뉴 단건 조회
     @GetMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<ResponseMessage> getMenu(@PathVariable Long storeId, @PathVariable Long menuId) {
+
         MenuResponseDto menu = menuService.getMenu(storeId,menuId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -49,9 +51,10 @@ public class MenuController {
     // C
     // 메뉴추가
     @PostMapping("/stores/{storeId}")
-    public ResponseEntity<ResponseMessage> addMenu(@PathVariable Long storeId,@RequestBody MenuAddRequestDto requestDto) {
+    public ResponseEntity<ResponseMessage> addMenu(@PathVariable Long storeId, @RequestBody MenuAddRequestDto requestDto,
+                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        MenuResponseDto menu = menuService.addMenu(storeId,requestDto);
+        MenuResponseDto menu = menuService.addMenu(storeId,requestDto,userDetails.getManager());
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
@@ -64,9 +67,10 @@ public class MenuController {
     // U
     // 메뉴 수정
     @PutMapping("/stores/{storeId}/menus/{menuId}")
-    public ResponseEntity<ResponseMessage> updateMenu(@PathVariable Long storeId,@PathVariable Long menuId,@RequestBody MenuUpdateRequestDto requestDto) {
+    public ResponseEntity<ResponseMessage> updateMenu(@PathVariable Long storeId,@PathVariable Long menuId,@RequestBody MenuUpdateRequestDto requestDto,
+                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        MenuResponseDto menu = menuService.updateMenu(storeId,menuId,requestDto);
+        MenuResponseDto menu = menuService.updateMenu(storeId,menuId,requestDto,userDetails.getManager());
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
@@ -78,14 +82,15 @@ public class MenuController {
 
     // D
     @DeleteMapping("/stores/{storeId}/menus/{menuId}")
-    public ResponseEntity<ResponseMessage> deleteMenu(@PathVariable Long storeId,@PathVariable Long menuId) {
+    public ResponseEntity<ResponseMessage> deleteMenu(@PathVariable Long storeId,@PathVariable Long menuId,
+                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        String message = menuService.deleteMenu(storeId,menuId);
+        Long deleteId = menuService.deleteMenu(storeId,menuId,userDetails.getManager());
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("[" + message + "](이)가 삭제되었습니다.")
+                        .message("[" + deleteId + "](이)가 삭제되었습니다.")
                         .build()
         );
     }
