@@ -2,6 +2,7 @@ package like.heocholi.spartaeats.entity;
 
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,8 +15,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import like.heocholi.spartaeats.constants.OrderState;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 @Table(name = "orders")
 public class Order extends Timestamped{
 	@Id
@@ -32,6 +37,7 @@ public class Order extends Timestamped{
 	
 	private String address;
 	
+	@Column(columnDefinition = "varchar(30)")
 	@Enumerated(EnumType.STRING)
 	private OrderState state;
 	
@@ -40,4 +46,7 @@ public class Order extends Timestamped{
 	
 	private int totalPrice;
 	
+	public void updateStatus(int state) {
+		this.state = OrderState.values()[state];
+	}
 }
