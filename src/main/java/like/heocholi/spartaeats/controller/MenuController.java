@@ -2,6 +2,8 @@ package like.heocholi.spartaeats.controller;
 
 import like.heocholi.spartaeats.dto.ResponseMessage;
 import like.heocholi.spartaeats.dto.menu.MenuAddRequestDto;
+import like.heocholi.spartaeats.dto.menu.MenuResponseDto;
+import like.heocholi.spartaeats.dto.menu.MenuUpdateRequestDto;
 import like.heocholi.spartaeats.entity.Menu;
 import like.heocholi.spartaeats.service.MenuService;
 import org.springframework.http.HttpStatus;
@@ -19,12 +21,12 @@ public class MenuController {
     //메뉴 단건 조회
     @GetMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<ResponseMessage> getMenu(@PathVariable Long storeId, @PathVariable Long menuId) {
-        Menu menu = menuService.getMenu(storeId,menuId);
+        MenuResponseDto menu = menuService.getMenu(storeId,menuId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menu.getStore().getName() + "]에 ["+ menu.getName()+"] 메뉴 조회가 완료되었습니다.")
+                        .message("["+menu.getStoreName() + "]에 ["+ menu.getName()+"] 메뉴 조회가 완료되었습니다.")
                         .data(menu)
                         .build()
         );
@@ -38,7 +40,7 @@ public class MenuController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message(menus.get(0).getStore().getName() +"의 모든 메뉴 조회가 완료되었습니다.")
+                        .message("["+menus.get(0).getStore().getName() +"]의 모든 메뉴 조회가 완료되었습니다.")
                         .data(menus)
                         .build()
         );
@@ -62,14 +64,14 @@ public class MenuController {
     // U
     // 메뉴 수정
     @PutMapping("/stores/{storeId}/menus/{menuId}")
-    public ResponseEntity<ResponseMessage> updateMenu(@PathVariable Long storeId,@PathVariable Long menuId,@RequestBody MenuAddRequestDto requestDto) {
+    public ResponseEntity<ResponseMessage> updateMenu(@PathVariable Long storeId,@PathVariable Long menuId,@RequestBody MenuUpdateRequestDto requestDto) {
 
-        Menu menu = menuService.updateMenu(storeId,menuId,requestDto);
+        MenuResponseDto menu = menuService.updateMenu(storeId,menuId,requestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menu.getStore().getName() + "]에 ["+ menu.getName()+"] 메뉴가 수정되었습니다.")
+                        .message("["+menu.getStoreName() + "]에 ["+ menu.getName()+"] 메뉴가 수정되었습니다.")
                         .build()
         );
     }

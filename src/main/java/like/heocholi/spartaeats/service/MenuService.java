@@ -2,6 +2,8 @@ package like.heocholi.spartaeats.service;
 
 import like.heocholi.spartaeats.dto.ResponseMessage;
 import like.heocholi.spartaeats.dto.menu.MenuAddRequestDto;
+import like.heocholi.spartaeats.dto.menu.MenuResponseDto;
+import like.heocholi.spartaeats.dto.menu.MenuUpdateRequestDto;
 import like.heocholi.spartaeats.entity.Menu;
 import like.heocholi.spartaeats.entity.Store;
 import like.heocholi.spartaeats.repository.MenuRepository;
@@ -23,23 +25,25 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
 
-    public Menu getMenu(Long storeId, Long menuId) {
+    public MenuResponseDto getMenu(Long storeId, Long menuId) {
 
         findStoreById(storeId);
         Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).orElseThrow(() -> new IllegalArgumentException("음식점에 해당 메뉴가 존재하지 않습니다."));
 
-        return menu;
+        return new MenuResponseDto(menu);
     }
 
-    public List<Menu> getMenus(Long storeId) {
+    public List<MenuResponseDto> getMenus(Long storeId) {
 
         findStoreById(storeId);
-        List<Menu> menus = menuRepository.findAllByStoreId(storeId).orElseThrow(() -> new IllegalArgumentException("음식점에 메뉴가 존재하지 않습니다."));
+        List<Menu> menus = menuRepository.findAllByStoreId(storeId);
+        if(menus.isEmpty()) throw new IllegalArgumentException("음식점에 메뉴를 등록해주세요.");
 
-        return menus;
+
+        return menuRepository.findAllByStoreId(storeId).stream().map(MenuResponseDto::new).toList();
     }
 
-    public Menu addMenu(Long storeId, MenuAddRequestDto requestDto) {
+    public MenuResponseDto addMenu(Long storeId, MenuAddRequestDto requestDto) {
 
         Store store = findStoreById(storeId);
         Menu menu = menuRepository.findByStoreIdAndName(storeId,requestDto.getName()).
@@ -47,21 +51,21 @@ public class MenuService {
 
         menuRepository.save(new Menu(requestDto.getName(),requestDto.getPrice(),store));
 
-        return menu;
+        return new MenuResponseDto(menu);
     }
 
-    public Menu updateMenu(Long storeId,Long menuId, MenuAddRequestDto requestDto) {
+    public MenuResponseDto updateMenu(Long storeId,Long menuId, MenuUpdateRequestDto requestDto) {
 
         Store store = findStoreById(storeId);
-        Menu menu = menuRepository.findById(menuId).orElseThrow(()-> new IllegalArgumentException("음식점에 메뉴가 존재하지 않습니다."));
+        Menu menu = menuRepository.findById(menuId).orElseThrow(()-> new IllegalArgumentException("음식점에 해당 메뉴가 존재하지 않습니다."));
         menu.update(requestDto.getName(),requestDto.getPrice());
 
-        return menu;
+        return new MenuResponseDto(menu);
     }
 
     public String deleteMenu(Long storeId,Long menuId) {
         Store store = findStoreById(storeId);
-        Menu menu = menuRepository.findById(menuId).orElseThrow(()-> new IllegalArgumentException("삭제할 메뉴가 존재하지 않습니다."));
+        Menu menu = menuRepository.findById(menuId).orElseThrow(()-> new IllegalArgumentException("삭제할 해당 메뉴가 존재하지 않습니다."));
 
         menuRepository.delete(menu);
 

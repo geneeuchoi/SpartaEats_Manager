@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 
-    Optional<List<Menu>> findAllByStoreId(Long storeId);
+    List<Menu> findAllByStoreId(Long storeId);
     Optional<Menu> findByStoreIdAndId(Long storeId, Long menuId);
     Optional<Menu> findByStoreIdAndName(Long storeId, String name);
 }
