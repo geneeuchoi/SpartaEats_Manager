@@ -59,6 +59,7 @@ public class MenuController {
         );
     }
 
+    // U
     // 메뉴 수정
     @PutMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<ResponseMessage> updateMenu(@PathVariable Long storeId,@PathVariable Long menuId,@RequestBody MenuAddRequestDto requestDto) {
@@ -73,15 +74,16 @@ public class MenuController {
         );
     }
 
+    // D
     @DeleteMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<ResponseMessage> deleteMenu(@PathVariable Long storeId,@PathVariable Long menuId) {
 
-        Menu menu = menuService.deleteMenu(storeId,menuId);
+        String message = menuService.deleteMenu(storeId,menuId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menu.getStore().getName() + "]에 ["+ menu.getName()+"] 메뉴가 삭제되었습니다.")
+                        .message("[" + message + "](이)가 삭제되었습니다.")
                         .build()
         );
     }

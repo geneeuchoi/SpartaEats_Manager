@@ -59,12 +59,17 @@ public class MenuService {
         return menu;
     }
 
-    public Menu deleteMenu(Long storeId,Long menuId) {
+    public String deleteMenu(Long storeId,Long menuId) {
+        Store store = findStoreById(storeId);
+        Menu menu = menuRepository.findById(menuId).orElseThrow(()-> new IllegalArgumentException("삭제할 메뉴가 존재하지 않습니다."));
 
-        return null;
+        menuRepository.delete(menu);
+
+        return menu.getName();
     }
 
 
+    /* util */
 
     private Store findStoreById(Long storeId) {
         Store store =storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("선택한 음식점이 존재하지 않습니다."));
