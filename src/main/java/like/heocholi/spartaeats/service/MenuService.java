@@ -62,7 +62,8 @@ public class MenuService {
         Store store = findStoreById(storeId);
         managerCheck(store.getManager().getId(), manager.getId());
 
-        Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).orElseThrow(()-> new IllegalArgumentException("음식점에 해당 메뉴가 존재하지 않습니다."));
+        Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).
+                orElseThrow(()-> new IllegalArgumentException("음식점에 해당 메뉴가 존재하지 않습니다."));
 
         menu.update(requestDto.getName(),requestDto.getPrice());
 
@@ -73,7 +74,8 @@ public class MenuService {
         Store store = findStoreById(storeId);
         managerCheck(store.getManager().getId(), manager.getId());
 
-        Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).orElseThrow(()-> new IllegalArgumentException("삭제할 해당 메뉴가 존재하지 않습니다."));
+        Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).
+                orElseThrow(()-> new IllegalArgumentException("삭제할 해당 메뉴가 존재하지 않습니다."));
 
         menuRepository.delete(menu);
 
@@ -91,7 +93,7 @@ public class MenuService {
 
     private void managerCheck(Long storeId,Long managerId){
         if(!storeId.equals(managerId)) {
-            throw new IllegalArgumentException("유저가 일치하지 않습니다.");
+            throw new IllegalArgumentException("음식점 점주와 유저가 일치하지 않습니다.");
         }
     }
 

@@ -75,7 +75,7 @@ public class MenuController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menu.getStoreName() + "]에 ["+ menu.getName()+"] 메뉴가 수정되었습니다.")
+                        .message("["+menu.getStoreName() + "]에 ["+ menu.getId()+" / "+menu.getName()+ "] 메뉴가 수정되었습니다.")
                         .build()
         );
     }
