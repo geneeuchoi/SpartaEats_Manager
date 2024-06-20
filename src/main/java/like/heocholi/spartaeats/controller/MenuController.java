@@ -23,13 +23,13 @@ public class MenuController {
     @GetMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<ResponseMessage> getMenu(@PathVariable Long storeId, @PathVariable Long menuId) {
 
-        MenuResponseDto menu = menuService.getMenu(storeId,menuId);
+        MenuResponseDto responseDto = menuService.getMenu(storeId,menuId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menu.getStoreName() + "]에 ["+ menu.getName()+"] 메뉴 조회가 완료되었습니다.")
-                        .data(menu)
+                        .message("["+responseDto.getStoreName() + "]에 ["+ responseDto.getName()+"] 메뉴 조회가 완료되었습니다.")
+                        .data(responseDto)
                         .build()
         );
     }
@@ -37,29 +37,30 @@ public class MenuController {
     //메뉴 전체 조회
     @GetMapping("/stores/{storeId}/menus")
     public ResponseEntity<ResponseMessage> getMenus(@PathVariable Long storeId) {
-        List<MenuResponseDto> menus = menuService.getMenus(storeId);
+        List<MenuResponseDto> menuResponseDtoList = menuService.getMenus(storeId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menus.get(0).getStoreName() +"]의 모든 메뉴 조회가 완료되었습니다.")
-                        .data(menus)
+                        .message("["+menuResponseDtoList.get(0).getStoreName() +"]의 모든 메뉴 조회가 완료되었습니다.")
+                        .data(menuResponseDtoList)
                         .build()
         );
     }
 
     // C
     // 메뉴추가
-    @PostMapping("/stores/{storeId}")
+    @PostMapping("/stores/{storeId}/menus")
     public ResponseEntity<ResponseMessage> addMenu(@PathVariable Long storeId, @RequestBody MenuAddRequestDto requestDto,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        MenuResponseDto menu = menuService.addMenu(storeId,requestDto,userDetails.getManager());
+        MenuResponseDto responseDto = menuService.addMenu(storeId,requestDto,userDetails.getManager());
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menu.getStoreName() + "]에 ["+ menu.getName()+"] 메뉴가 추가되었습니다.")
+                        .message("["+responseDto.getStoreName() + "]에 ["+ responseDto.getName()+"] 메뉴가 추가되었습니다.")
+                        .data(responseDto)
                         .build()
         );
     }
@@ -70,12 +71,13 @@ public class MenuController {
     public ResponseEntity<ResponseMessage> updateMenu(@PathVariable Long storeId,@PathVariable Long menuId,@RequestBody MenuUpdateRequestDto requestDto,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        MenuResponseDto menu = menuService.updateMenu(storeId,menuId,requestDto,userDetails.getManager());
+        MenuResponseDto responseDto = menuService.updateMenu(storeId,menuId,requestDto,userDetails.getManager());
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menu.getStoreName() + "]에 ["+ menu.getId()+" / "+menu.getName()+ "] 메뉴가 수정되었습니다.")
+                        .message("["+responseDto.getStoreName() + "]에 ["+ responseDto.getId()+" / "+responseDto.getName()+ "] 메뉴가 수정되었습니다.")
+                        .data(responseDto)
                         .build()
         );
     }
