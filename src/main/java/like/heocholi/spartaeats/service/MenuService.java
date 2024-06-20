@@ -70,7 +70,7 @@ public class MenuService {
         return new MenuResponseDto(menu);
     }
 
-    public Long deleteMenu(Long storeId,Long menuId,Manager manager) {
+    public MenuResponseDto deleteMenu(Long storeId,Long menuId,Manager manager) {
         Store store = findStoreById(storeId);
         managerCheck(store.getManager().getId(), manager.getId());
 
@@ -79,7 +79,7 @@ public class MenuService {
 
         menuRepository.delete(menu);
 
-        return menu.getId();
+        return new MenuResponseDto(menu);
     }
 
 

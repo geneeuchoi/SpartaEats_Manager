@@ -4,6 +4,7 @@ import like.heocholi.spartaeats.dto.ResponseMessage;
 import like.heocholi.spartaeats.dto.menu.MenuAddRequestDto;
 import like.heocholi.spartaeats.dto.menu.MenuResponseDto;
 import like.heocholi.spartaeats.dto.menu.MenuUpdateRequestDto;
+import like.heocholi.spartaeats.entity.Menu;
 import like.heocholi.spartaeats.security.UserDetailsImpl;
 import like.heocholi.spartaeats.service.MenuService;
 import org.springframework.http.HttpStatus;
@@ -86,13 +87,13 @@ public class MenuController {
     @DeleteMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<ResponseMessage> deleteMenu(@PathVariable Long storeId,@PathVariable Long menuId,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        Long deleteId = menuService.deleteMenu(storeId,menuId,userDetails.getManager());
+        MenuResponseDto deleteMenu = menuService.deleteMenu(storeId,menuId,userDetails.getManager());
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("[" + deleteId + "](이)가 삭제되었습니다.")
+                        .message("[" + deleteMenu.getName() + "](이)가 삭제되었습니다.")
+                        .data(deleteMenu.getId())
                         .build()
         );
     }
