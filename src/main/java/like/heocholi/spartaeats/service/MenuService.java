@@ -1,22 +1,20 @@
 package like.heocholi.spartaeats.service;
 
-import like.heocholi.spartaeats.dto.ResponseMessage;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import like.heocholi.spartaeats.dto.menu.MenuAddRequestDto;
 import like.heocholi.spartaeats.dto.menu.MenuResponseDto;
 import like.heocholi.spartaeats.dto.menu.MenuUpdateRequestDto;
 import like.heocholi.spartaeats.entity.Manager;
 import like.heocholi.spartaeats.entity.Menu;
 import like.heocholi.spartaeats.entity.Store;
+import like.heocholi.spartaeats.exception.MenuException;
 import like.heocholi.spartaeats.repository.MenuRepository;
 import like.heocholi.spartaeats.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -47,20 +45,17 @@ public class MenuService {
     public MenuResponseDto addMenu(Long storeId, MenuAddRequestDto requestDto, Manager manager) {
 
         Store store = findStoreById(storeId);
-        managerCheck(store.getManager().getId(), manager.getId());
-
-        Menu menu = menuRepository.findByStoreIdAndName(storeId,requestDto.getName()).
-                orElseThrow(()->new IllegalArgumentException("해당 음식점에 이미 ["+requestDto.getName()+"]가 있습니다."));
-
-        menuRepository.save(new Menu(requestDto.getName(),requestDto.getPrice(),store));
-
-        return new MenuResponseDto(menu);
+        managerCheck(store, manager.getId());
+        
+        Menu saveMenu = menuRepository.save(new Menu(requestDto.getName(), requestDto.getPrice(), store));
+        
+        return new MenuResponseDto(saveMenu);
     }
 
     public MenuResponseDto updateMenu(Long storeId,Long menuId, MenuUpdateRequestDto requestDto,Manager manager) {
 
         Store store = findStoreById(storeId);
-        managerCheck(store.getManager().getId(), manager.getId());
+        managerCheck(store, manager.getId());
 
         Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).
                 orElseThrow(()-> new IllegalArgumentException("음식점에 해당 메뉴가 존재하지 않습니다."));
@@ -72,10 +67,10 @@ public class MenuService {
 
     public MenuResponseDto deleteMenu(Long storeId,Long menuId,Manager manager) {
         Store store = findStoreById(storeId);
-        managerCheck(store.getManager().getId(), manager.getId());
+        managerCheck(store, manager.getId());
 
         Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).
-                orElseThrow(()-> new IllegalArgumentException("삭제할 해당 메뉴가 존재하지 않습니다."));
+                orElseThrow(()-> new MenuException("삭제할 해당 메뉴가 존재하지 않습니다."));
 
         menuRepository.delete(menu);
 
@@ -86,14 +81,12 @@ public class MenuService {
     /* util */
 
     private Store findStoreById(Long storeId) {
-        Store store =storeRepository.findById(storeId).orElseThrow(() -> new IllegalArgumentException("선택한 음식점이 존재하지 않습니다."));
-
-        return store;
+		return storeRepository.findById(storeId).orElseThrow(() -> new MenuException("선택한 음식점이 존재하지 않습니다."));
     }
 
-    private void managerCheck(Long storeId,Long managerId){
-        if(!storeId.equals(managerId)) {
-            throw new IllegalArgumentException("음식점 점주와 유저가 일치하지 않습니다.");
+    private void managerCheck(Store store, Long managerId){
+        if(!store.getManager().getId().equals(managerId)){
+            throw new MenuException("해당 음식점의 매니저만 메뉴를 수정할 수 있습니다.");
         }
     }
 
