@@ -32,6 +32,14 @@ public class GlobalExceptionHandler {
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
 	}
-	
-	
+
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<ErrorMessage<String>> handleCustomException(CustomException e) {
+		ErrorMessage errorMessage = ErrorMessage.builder()
+				.statusCode(e.getErrorType().getHttpStatus().value())
+				.message(e.getErrorType().getMessage())
+				.build();
+
+		return ResponseEntity.status(e.getErrorType().getHttpStatus()).body(errorMessage);
+	}
 }
