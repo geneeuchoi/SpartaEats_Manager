@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j(topic = "JwtUtil")
 public class JwtUtil {
     // accessToken 토큰 헤더
-    public static final String AUTH_ACCESS_HEADER = "AccessToken";
+    public static final String AUTH_ACCESS_HEADER = "Authorization";
     // refreshToken 토큰 헤더
     public static final String AUTH_REFRESH_HEADER = "RefreshToken";
     // 사용자 권한 키
