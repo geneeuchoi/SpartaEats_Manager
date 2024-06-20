@@ -35,12 +35,12 @@ public class MenuController {
     //메뉴 전체 조회
     @GetMapping("/stores/{storeId}/menus")
     public ResponseEntity<ResponseMessage> getMenus(@PathVariable Long storeId) {
-        List<Menu> menus = menuService.getMenus(storeId);
+        List<MenuResponseDto> menus = menuService.getMenus(storeId);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menus.get(0).getStore().getName() +"]의 모든 메뉴 조회가 완료되었습니다.")
+                        .message("["+menus.get(0).getStoreName() +"]의 모든 메뉴 조회가 완료되었습니다.")
                         .data(menus)
                         .build()
         );
@@ -51,12 +51,12 @@ public class MenuController {
     @PostMapping("/stores/{storeId}")
     public ResponseEntity<ResponseMessage> addMenu(@PathVariable Long storeId,@RequestBody MenuAddRequestDto requestDto) {
 
-        Menu menu = menuService.addMenu(storeId,requestDto);
+        MenuResponseDto menu = menuService.addMenu(storeId,requestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseMessage.builder()
                         .statusCode(HttpStatus.OK.value())
-                        .message("["+menu.getStore().getName() + "]에 ["+ menu.getName()+"] 메뉴가 추가되었습니다.")
+                        .message("["+menu.getStoreName() + "]에 ["+ menu.getName()+"] 메뉴가 추가되었습니다.")
                         .build()
         );
     }
