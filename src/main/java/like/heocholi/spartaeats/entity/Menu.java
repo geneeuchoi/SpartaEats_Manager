@@ -39,4 +39,9 @@ public class Menu {
 		this.price = price;
 		this.store = store;
 	}
+
+	public void update(String name, int price) {
+		this.name = name!=null ? name : this.name;
+		this.price = price!=0 ? price : this.price;
+	}
 }

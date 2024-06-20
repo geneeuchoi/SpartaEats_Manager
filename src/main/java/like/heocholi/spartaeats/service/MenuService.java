@@ -52,7 +52,11 @@ public class MenuService {
 
     public Menu updateMenu(Long storeId,Long menuId, MenuAddRequestDto requestDto) {
 
-        return null;
+        Store store = findStoreById(storeId);
+        Menu menu = menuRepository.findById(menuId).orElseThrow(()-> new IllegalArgumentException("음식점에 메뉴가 존재하지 않습니다."));
+        menu.update(requestDto.getName(),requestDto.getPrice());
+
+        return menu;
     }
 
     public Menu deleteMenu(Long storeId,Long menuId) {
