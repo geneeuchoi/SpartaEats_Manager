@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @Entity
 @Getter
 @Table(name = "stores")
@@ -21,9 +20,9 @@ public class Store extends Timestamped{
 	private Long id;
 
 	private String name;
-
-	@JoinColumn(name = "manager_id")
+	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "manager_id")
 	private Manager manager;
 
 	private String address;
