@@ -21,6 +21,7 @@ public class Store extends Timestamped{
 
 	private String name;
 
+	@JoinColumn(name = "manager_id")
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Manager manager;
 
