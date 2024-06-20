@@ -3,6 +3,10 @@ package like.heocholi.spartaeats.service;
 import java.util.Optional;
 
 import like.heocholi.spartaeats.constants.ErrorType;
+import like.heocholi.spartaeats.constants.UserStatus;
+import like.heocholi.spartaeats.dto.SignupResponseDto;
+import like.heocholi.spartaeats.dto.WithdrawRequestDto;
+import like.heocholi.spartaeats.entity.Customer;
 import like.heocholi.spartaeats.exception.ManagerException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +25,7 @@ public class ManagerService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public String signup(SignupRequestDto requestDto) {
+    public SignupResponseDto signup(SignupRequestDto requestDto) {
         String userId = requestDto.getUserId();
         String password = requestDto.getPassword();
 
@@ -36,6 +40,38 @@ public class ManagerService {
 
         managerRepository.save(manager);
 
-        return "회원가입 성공";
+        return new SignupResponseDto(manager);
+    }
+
+    @Transactional
+    public String logout(String userId) {
+        // 유저 확인
+        Manager manager = this.findByUserId(userId);
+
+        manager.removeRefreshToken();
+
+        return manager.getUserId();
+    }
+
+    @Transactional
+    public String withdrawManager(WithdrawRequestDto requestDto, String userId) {
+        // 유저 확인
+        Manager manager = this.findByUserId(userId);
+        // 이미 탈퇴한 회원인지 확인
+        if(manager.getUserStatus().equals(UserStatus.DEACTIVATE)){
+            throw new ManagerException(ErrorType.DEACTIVATE_USER);
+        }
+        // 비밀번호 확인
+        if(!passwordEncoder.matches(requestDto.getPassword(), manager.getPassword())){
+            throw new ManagerException(ErrorType.INVALID_PASSWORD);
+        }
+
+        manager.withdrawManager();
+
+        return manager.getUserId();
+    }
+
+    private Manager findByUserId(String userId){
+        return managerRepository.findByUserId(userId).orElseThrow(()-> new ManagerException(ErrorType.NOT_FOUND_USER));
     }
 }

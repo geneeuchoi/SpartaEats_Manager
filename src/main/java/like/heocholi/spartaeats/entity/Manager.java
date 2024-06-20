@@ -56,4 +56,12 @@ public class Manager extends Timestamped{
 		}
 		return false;
 	}
+
+	public void withdrawManager() {
+		this.userStatus = UserStatus.DEACTIVATE;
+	}
+
+	public void removeRefreshToken() {
+		this.refreshToken = "";
+	}
 }
