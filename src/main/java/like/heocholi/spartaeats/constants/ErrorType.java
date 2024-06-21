@@ -38,7 +38,7 @@ public enum ErrorType {
     INVALID_ORDER_STORE(HttpStatus.BAD_REQUEST, "본인의 가게 주문만 조회할 수 있습니다."),
     
     // store
-    NOT_FOUND_STORE(HttpStatus.NOT_FOUND, "가게를 찾을 수 없습니다."),
+    NOT_FOUND_STORES(HttpStatus.NOT_FOUND,"등록된 음식점이 없습니다."),
     
     // page
     INVALID_PAGE(HttpStatus.BAD_REQUEST, "페이지 번호가 올바르지 않습니다."),
