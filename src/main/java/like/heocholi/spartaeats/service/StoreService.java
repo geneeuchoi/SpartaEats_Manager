@@ -1,9 +1,11 @@
 package like.heocholi.spartaeats.service;
 
+import like.heocholi.spartaeats.constants.ErrorType;
 import like.heocholi.spartaeats.dto.StoreRequestDto;
 import like.heocholi.spartaeats.dto.StoreResponseDto;
 import like.heocholi.spartaeats.entity.Manager;
 import like.heocholi.spartaeats.entity.Store;
+import like.heocholi.spartaeats.exception.StoreException;
 import like.heocholi.spartaeats.repository.StoreRepository;
 import like.heocholi.spartaeats.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +65,7 @@ public class StoreService {
 
     public Store findStore(Long storeId, Manager manager) {
         return storeRepository.findByIdAndManagerId(storeId, manager.getId())
-                .orElseThrow(()-> new IllegalStateException("해당 가게가 없습니다."));
+                .orElseThrow(()-> new StoreException(ErrorType.NOT_FOUND_STORE));
     }
 
 

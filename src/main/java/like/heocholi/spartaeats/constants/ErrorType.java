@@ -31,7 +31,17 @@ public enum ErrorType {
     NOT_FOUND_AUTHENTICATION_INFO(HttpStatus.NOT_FOUND, "인증 정보를 찾을 수 없습니다."),
     INVALID_JWT(HttpStatus.UNAUTHORIZED, "유효하지 않는 JWT 입니다."),
     EXPIRED_JWT(HttpStatus.FORBIDDEN, "만료된 JWT 입니다."),
-    LOGGED_OUT_TOKEN(HttpStatus.FORBIDDEN, "이미 로그아웃된 토큰입니다.")
+    LOGGED_OUT_TOKEN(HttpStatus.FORBIDDEN, "이미 로그아웃된 토큰입니다."),
+    
+    // order
+    NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "주문이 존재하지 않습니다."),
+    INVALID_ORDER_STORE(HttpStatus.BAD_REQUEST, "본인의 가게 주문만 조회할 수 있습니다."),
+    
+    // store
+    NOT_FOUND_STORE(HttpStatus.NOT_FOUND, "가게를 찾을 수 없습니다."),
+    
+    // page
+    INVALID_PAGE(HttpStatus.BAD_REQUEST, "페이지 번호가 올바르지 않습니다."),
     ;
 
     private final HttpStatus httpStatus;
