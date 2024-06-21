@@ -34,12 +34,12 @@ public class OrderController {
 		@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		
-		OrderListResponseDTO orderListResponseDTO = orderService.getStoreOrders(storeId, page, userDetails.getManager());
+		OrderListResponseDTO responseDTO = orderService.getStoreOrders(storeId, page, userDetails.getManager());
 		
 		ResponseMessage<OrderListResponseDTO> responseMessage = ResponseMessage.<OrderListResponseDTO>builder()
 			.statusCode(HttpStatus.OK.value())
 			.message("주문 목록을 불러왔습니다.")
-			.data(orderListResponseDTO)
+			.data(responseDTO)
 			.build();
 		
 		return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
@@ -49,12 +49,12 @@ public class OrderController {
 	@GetMapping("/{orderId}")
 	public ResponseEntity<ResponseMessage<OrderResponseDTO>> getStoreOrderDetail(@PathVariable Long storeId, @PathVariable Long orderId,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		OrderResponseDTO orderResponseDTO = orderService.getStoreOrderDetails(storeId, orderId, userDetails.getManager());
+		OrderResponseDTO responseDTO = orderService.getStoreOrderDetails(storeId, orderId, userDetails.getManager());
 		
 		ResponseMessage<OrderResponseDTO> responseMessage = ResponseMessage.<OrderResponseDTO>builder()
 			.statusCode(HttpStatus.OK.value())
 			.message("주문 상세 정보를 불러왔습니다.")
-			.data(orderResponseDTO)
+			.data(responseDTO)
 			.build();
 		
 		return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
@@ -64,12 +64,12 @@ public class OrderController {
 	@PutMapping("{orderId}")
 	public ResponseEntity<ResponseMessage<OrderStateResponseDTO>> changeOrderStatus(@PathVariable Long storeId, @PathVariable Long orderId,
 		@Valid @RequestBody OrderStateRequestDTO requestDTO,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		OrderStateResponseDTO orderResponseDTO = orderService.changeOrderState(storeId, orderId, requestDTO, userDetails.getManager());
+		OrderStateResponseDTO responseDTO = orderService.changeOrderState(storeId, orderId, requestDTO, userDetails.getManager());
 		
 		ResponseMessage<OrderStateResponseDTO> responseMessage = ResponseMessage.<OrderStateResponseDTO>builder()
 			.statusCode(HttpStatus.OK.value())
 			.message("주문 상태가 변경되었습니다.")
-			.data(orderResponseDTO)
+			.data(responseDTO)
 			.build();
 	
 		return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
