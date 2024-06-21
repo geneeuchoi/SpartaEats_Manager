@@ -1,7 +1,9 @@
 package like.heocholi.spartaeats.exception;
 
-public class MenuException extends IllegalArgumentException {
-	public MenuException(String message) {
+import like.heocholi.spartaeats.constants.ErrorType;
+
+public class MenuException  extends CustomException{
+	public MenuException(ErrorType message) {
 		super(message);
 	}
 }
