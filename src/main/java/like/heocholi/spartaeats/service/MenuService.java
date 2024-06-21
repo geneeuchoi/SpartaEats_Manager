@@ -50,7 +50,10 @@ public class MenuService {
 
         Store store = findStoreById(storeId);
         managerCheck(store, manager.getId());
-        
+
+        if(menuRepository.findByStoreIdAndName(storeId,requestDto.getName()).isEmpty()){
+            throw new MenuException(ErrorType.DUPLICATE_MENU);
+        }
         Menu saveMenu = menuRepository.save(new Menu(requestDto.getName(), requestDto.getPrice(), store));
         
         return new MenuResponseDto(saveMenu);
@@ -64,6 +67,10 @@ public class MenuService {
 
         Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).
                 orElseThrow(()-> new MenuException(ErrorType.NOT_FOUND_MENU));
+
+        if(menuRepository.findByStoreIdAndName(storeId,requestDto.getName()).isEmpty()){
+            throw new MenuException(ErrorType.DUPLICATE_MENU);
+        }
 
         menu.update(requestDto.getName(),requestDto.getPrice());
 

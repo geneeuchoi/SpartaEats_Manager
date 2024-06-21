@@ -18,6 +18,7 @@ public enum ErrorType {
     REQUIRES_LOGIN(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),
 
     //Menu
+    DUPLICATE_MENU(HttpStatus.LOCKED,"이미 등록된 메뉴 이름입니다."),
     NOT_FOUND_STORE(HttpStatus.NOT_FOUND,"선택한 음식점이 존재하지 않습니다."),
     NOT_FOUND_MENUS(HttpStatus.NOT_FOUND,"메뉴가 없습니다."),
     NOT_FOUND_MENU(HttpStatus.NOT_FOUND,"해당 메뉴가 존재하지 않습니다."),
