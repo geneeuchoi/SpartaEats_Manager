@@ -29,8 +29,9 @@ public class MenuController {
     // R
     //메뉴 단건 조회
     @GetMapping("/stores/{storeId}/menus/{menuId}")
-    public ResponseEntity<ResponseMessage<MenuResponseDto>> getMenu(@PathVariable Long storeId, @PathVariable Long menuId) {
-        MenuResponseDto responseDto = menuService.getMenu(storeId,menuId);
+    public ResponseEntity<ResponseMessage<MenuResponseDto>> getMenu(@PathVariable Long storeId, @PathVariable Long menuId,
+                                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        MenuResponseDto responseDto = menuService.getMenu(storeId,menuId,userDetails.getManager());
 
         ResponseMessage<MenuResponseDto> responseMessage = ResponseMessage.<MenuResponseDto>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -43,8 +44,9 @@ public class MenuController {
 
     //메뉴 전체 조회
     @GetMapping("/stores/{storeId}/menus")
-    public ResponseEntity<ResponseMessage<List<MenuResponseDto>>> getMenus(@PathVariable Long storeId) {
-        List<MenuResponseDto> menuResponseDtoList = menuService.getMenus(storeId);
+    public ResponseEntity<ResponseMessage<List<MenuResponseDto>>> getMenus(@PathVariable Long storeId,
+                                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<MenuResponseDto> menuResponseDtoList = menuService.getMenus(storeId,userDetails.getManager());
 
         ResponseMessage<List<MenuResponseDto>> responseMessage = ResponseMessage.<List<MenuResponseDto>>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -59,7 +61,7 @@ public class MenuController {
     // 메뉴추가
     @PostMapping("/stores/{storeId}/menus")
     public ResponseEntity<ResponseMessage<MenuResponseDto>> addMenu(@PathVariable Long storeId, @RequestBody MenuAddRequestDto requestDto,
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         MenuResponseDto responseDto = menuService.addMenu(storeId, requestDto, userDetails.getManager());
 
@@ -76,13 +78,13 @@ public class MenuController {
     // 메뉴 수정
     @PutMapping("/stores/{storeId}/menus/{menuId}")
     public ResponseEntity<ResponseMessage<MenuResponseDto>> updateMenu(@PathVariable Long storeId,@PathVariable Long menuId,@RequestBody MenuUpdateRequestDto requestDto,
-                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         MenuResponseDto responseDto = menuService.updateMenu(storeId,menuId,requestDto,userDetails.getManager());
 
         ResponseMessage<MenuResponseDto> responseMessage = ResponseMessage.<MenuResponseDto>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("["+responseDto.getStoreName() + "]에 ["+ responseDto.getId()+" / "+responseDto.getName()+ "] 메뉴가 수정되었습니다.")
+                .message("["+responseDto.getStoreName() + "]에 [" + responseDto.getName()+ "] 메뉴가 수정되었습니다.")
                 .data(responseDto)
                 .build();
 
@@ -91,14 +93,14 @@ public class MenuController {
 
     // D
     @DeleteMapping("/stores/{storeId}/menus/{menuId}")
-    public ResponseEntity<ResponseMessage<MenuResponseDto>> deleteMenu(@PathVariable Long storeId,@PathVariable Long menuId,
-                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseMessage<Long>> deleteMenu(@PathVariable Long storeId,@PathVariable Long menuId,
+                                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         MenuResponseDto deleteMenu = menuService.deleteMenu(storeId,menuId,userDetails.getManager());
 
-        ResponseMessage<MenuResponseDto> responseMessage = ResponseMessage.<MenuResponseDto>builder()
+        ResponseMessage<Long> responseMessage = ResponseMessage.<Long>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("[" + deleteMenu.getName() + "](이)가 삭제되었습니다.")
-                .data(deleteMenu)
+                .data(deleteMenu.getId())
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);

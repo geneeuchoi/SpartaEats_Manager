@@ -27,18 +27,20 @@ public class MenuService {
     private final StoreRepository storeRepository;
 
 
-    public MenuResponseDto getMenu(Long storeId, Long menuId) {
+    public MenuResponseDto getMenu(Long storeId, Long menuId,Manager manager) {
         Store store = findStoreById(storeId);
         Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).orElseThrow(() -> new MenuException(ErrorType.NOT_FOUND_MENU));
+        managerCheck(store.getManager().getId(), manager.getId());
 
         return new MenuResponseDto(menu);
     }
 
-    public List<MenuResponseDto> getMenus(Long storeId) {
+    public List<MenuResponseDto> getMenus(Long storeId,Manager manager) {
         Store store = findStoreById(storeId);
         List<MenuResponseDto> menuList = menuRepository.findAllByStoreId(storeId).stream().map(MenuResponseDto::new).toList();
+        managerCheck(store.getManager().getId(), manager.getId());
 
-        if(menuList.isEmpty()){
+        if(menuList.size()==0){
             throw new MenuException(ErrorType.NOT_FOUND_MENUS);
         }
 
@@ -49,11 +51,9 @@ public class MenuService {
     public MenuResponseDto addMenu(Long storeId, MenuAddRequestDto requestDto, Manager manager) {
 
         Store store = findStoreById(storeId);
-        managerCheck(store, manager.getId());
+        managerCheck(store.getManager().getId(), manager.getId());
+        menuDuplicateCheck(storeId, requestDto.getName());
 
-        if(menuRepository.findByStoreIdAndName(storeId,requestDto.getName()).isEmpty()){
-            throw new MenuException(ErrorType.DUPLICATE_MENU);
-        }
         Menu saveMenu = menuRepository.save(new Menu(requestDto.getName(), requestDto.getPrice(), store));
         
         return new MenuResponseDto(saveMenu);
@@ -63,14 +63,11 @@ public class MenuService {
     public MenuResponseDto updateMenu(Long storeId,Long menuId, MenuUpdateRequestDto requestDto,Manager manager) {
 
         Store store = findStoreById(storeId);
-        managerCheck(store, manager.getId());
-
+        managerCheck(store.getManager().getId(), manager.getId());
         Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).
                 orElseThrow(()-> new MenuException(ErrorType.NOT_FOUND_MENU));
 
-        if(menuRepository.findByStoreIdAndName(storeId,requestDto.getName()).isEmpty()){
-            throw new MenuException(ErrorType.DUPLICATE_MENU);
-        }
+        menuDuplicateCheck(storeId, requestDto.getName());
 
         menu.update(requestDto.getName(),requestDto.getPrice());
 
@@ -80,7 +77,7 @@ public class MenuService {
     @Transactional
     public MenuResponseDto deleteMenu(Long storeId,Long menuId,Manager manager) {
         Store store = findStoreById(storeId);
-        managerCheck(store, manager.getId());
+        managerCheck(store.getManager().getId(), manager.getId());
 
         Menu menu = menuRepository.findByStoreIdAndId(storeId,menuId).
                 orElseThrow(()-> new MenuException(ErrorType.NOT_FOUND_MENU));
@@ -93,15 +90,23 @@ public class MenuService {
 
     /* util */
 
+    // Store id로 가져오기
     private Store findStoreById(Long storeId) {
 		return storeRepository.findById(storeId).orElseThrow(() -> new MenuException(ErrorType.NOT_FOUND_STORE));
     }
 
-    private void managerCheck(Store store, Long managerId){
-        if(!store.getManager().getId().equals(managerId)){
+    // 음식점 매니저인지 체크
+    private void managerCheck(Long storeManagerId, Long managerId){
+        if(!storeManagerId.equals(managerId)){
             throw new MenuException(ErrorType.NOT_EQUAL_MANAGER);
         }
     }
 
+    // 메뉴 이름 중복 확인 ( 등록, 수정시 )
+    private void menuDuplicateCheck(Long storeId, String menuName){
+        if(menuRepository.findByStoreIdAndName(storeId,menuName).isPresent()){
+            throw new MenuException(ErrorType.DUPLICATE_MENU);
+        }
+    }
 
 }

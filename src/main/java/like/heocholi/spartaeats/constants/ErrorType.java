@@ -22,7 +22,7 @@ public enum ErrorType {
     NOT_FOUND_STORE(HttpStatus.NOT_FOUND,"선택한 음식점이 존재하지 않습니다."),
     NOT_FOUND_MENUS(HttpStatus.NOT_FOUND,"메뉴가 없습니다."),
     NOT_FOUND_MENU(HttpStatus.NOT_FOUND,"해당 메뉴가 존재하지 않습니다."),
-    NOT_EQUAL_MANAGER(HttpStatus.FORBIDDEN,"해당 음식점의 매니저만 메뉴를 수정할 수 있습니다."),
+    NOT_EQUAL_MANAGER(HttpStatus.FORBIDDEN,"해당 음식점의 매니저만 접근할 수 있습니다."),
 
 
 
