@@ -17,6 +17,14 @@ public enum ErrorType {
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다."),
     REQUIRES_LOGIN(HttpStatus.UNAUTHORIZED, "로그인이 필요한 서비스입니다."),
 
+    //Menu
+    NOT_FOUND_STORE(HttpStatus.NOT_FOUND,"선택한 음식점이 존재하지 않습니다."),
+    NOT_FOUND_MENUS(HttpStatus.NOT_FOUND,"메뉴가 없습니다."),
+    NOT_FOUND_MENU(HttpStatus.NOT_FOUND,"해당 메뉴가 존재하지 않습니다."),
+    NOT_EQUAL_MANAGER(HttpStatus.FORBIDDEN,"해당 음식점의 매니저만 메뉴를 수정할 수 있습니다."),
+
+
+
     // JWT
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다. 다시 로그인 해주세요."),
     NOT_FOUND_AUTHENTICATION_INFO(HttpStatus.NOT_FOUND, "인증 정보를 찾을 수 없습니다."),
