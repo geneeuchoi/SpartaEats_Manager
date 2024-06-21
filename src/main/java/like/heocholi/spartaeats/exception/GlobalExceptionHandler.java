@@ -43,14 +43,4 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(e.getErrorType().getHttpStatus()).body(errorMessage);
 	}
 	
-	@ExceptionHandler({MenuException.class, ContentNotFoundException.class, PageException.class})
-	public ResponseEntity<ErrorMessage<String>> handleMenuException(MenuException e) {
-		
-		ErrorMessage errorMessage = ErrorMessage.builder()
-				.statusCode(HttpStatus.BAD_REQUEST.value())
-				.message(e.getMessage())
-				.build();
-		
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-	}
 }
