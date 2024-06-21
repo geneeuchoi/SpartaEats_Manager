@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import like.heocholi.spartaeats.constants.ErrorType;
 import like.heocholi.spartaeats.dto.OrderListResponseDTO;
 import like.heocholi.spartaeats.dto.OrderResponseDTO;
 import like.heocholi.spartaeats.dto.OrderStateRequestDTO;
@@ -14,10 +15,9 @@ import like.heocholi.spartaeats.dto.OrderStateResponseDTO;
 import like.heocholi.spartaeats.entity.Manager;
 import like.heocholi.spartaeats.entity.Order;
 import like.heocholi.spartaeats.entity.Store;
-import like.heocholi.spartaeats.exception.ContentNotFoundException;
+import like.heocholi.spartaeats.exception.OrderException;
 import like.heocholi.spartaeats.exception.PageException;
 import like.heocholi.spartaeats.repository.OrderRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -69,23 +69,23 @@ public class OrderService {
 	//페이지 유효성 검사
 	private static void checkValidatePage(Integer page, Page<Order> orderPage) {
 		if (orderPage.getTotalElements() == 0) {
-			throw new ContentNotFoundException("주문 내역이 없습니다.");
+			throw new OrderException(ErrorType.NOT_FOUND_ORDER);
 		}
 		
 		if (page > orderPage.getTotalPages() || page < 1) {
-			throw new PageException("페이지가 존재하지 않습니다.");
+			throw new PageException(ErrorType.INVALID_PAGE);
 		}
 	}
 	
 	//가게 유효성 검사
 	private static void checkValidateStore(Order order, Store store) {
 		if (!order.getStore().equals(store)) {
-			throw new PageException("본인 가게의 주문 내역만 조회할 수 있습니다.");
+			throw new OrderException(ErrorType.INVALID_ORDER_STORE);
 		}
 	}
 	
 	//주문 조회
 	private Order getOrder(Long orderId) {
-		return orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("주문 내역이 존재하지 않습니다."));
+		return orderRepository.findById(orderId).orElseThrow(() -> new OrderException(ErrorType.NOT_FOUND_ORDER));
 	}
 }
