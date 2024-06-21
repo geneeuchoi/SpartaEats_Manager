@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(e.getErrorType().getHttpStatus()).body(errorMessage);
 	}
 	
-	@ExceptionHandler({MenuException.class, ContentNotFoundException.class, PageException.class})
+	@ExceptionHandler(MenuException.class)
 	public ResponseEntity<ErrorMessage<String>> handleMenuException(MenuException e) {
 		
 		ErrorMessage errorMessage = ErrorMessage.builder()
