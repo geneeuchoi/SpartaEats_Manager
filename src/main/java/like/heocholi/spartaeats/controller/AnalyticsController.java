@@ -1,5 +1,6 @@
 package like.heocholi.spartaeats.controller;
 
+import like.heocholi.spartaeats.dto.BestMenusResponseDto;
 import like.heocholi.spartaeats.dto.ResponseMessage;
 import like.heocholi.spartaeats.dto.VipResponseDto;
 import like.heocholi.spartaeats.entity.Manager;
@@ -43,5 +44,20 @@ public class AnalyticsController {
 
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
+
+    @GetMapping("/orders/top-menus")
+    public ResponseEntity<ResponseMessage<List<BestMenusResponseDto>>> getBestMenus(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        Manager manager = userDetails.getManager();
+        List<BestMenusResponseDto> bestMenus = analyticsService.getBestMenus(storeId, manager);
+
+        ResponseMessage<List<BestMenusResponseDto>> responseMessage = ResponseMessage.<List<BestMenusResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("BestMenu 조회 성공")
+                .data(bestMenus)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+    }
+
 }
 

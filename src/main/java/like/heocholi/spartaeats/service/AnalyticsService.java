@@ -1,9 +1,10 @@
 package like.heocholi.spartaeats.service;
 
+import like.heocholi.spartaeats.dto.BestMenusResponseDto;
 import like.heocholi.spartaeats.dto.VipResponseDto;
-import like.heocholi.spartaeats.entity.Customer;
-import like.heocholi.spartaeats.entity.Manager;
-import like.heocholi.spartaeats.entity.Store;
+import like.heocholi.spartaeats.entity.*;
+import like.heocholi.spartaeats.repository.MenuRepository;
+import like.heocholi.spartaeats.repository.OrderMenuRepository;
 import like.heocholi.spartaeats.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnalyticsService {
 
-    //TODO: OrderService로 리팩토링 해야겠죠..?
+    //TODO: Service로 리팩토링 해야겠죠..?
     private final OrderRepository orderRepository;
+    private final MenuRepository menuRepository;
+    private final OrderMenuRepository orderMenuRepository;
+    // TODO: ------------------------
+
     private final StoreService storeService;
 
     public List<VipResponseDto> getVipList(Long storeId, Manager manager) {
@@ -34,4 +39,18 @@ public class AnalyticsService {
         return responseDtoList;
     }
 
+
+    public List<BestMenusResponseDto> getBestMenus(Long storeId, Manager manager){
+        List<Menu> menuList = menuRepository.findAllByStoreId(storeId);
+
+        List<Object[]> bestMenus = orderMenuRepository.findBestMenus(menuList);
+
+        List<BestMenusResponseDto> bestMenuList = new ArrayList<>();
+        for (Object[] objects : bestMenus) {
+            System.out.println("menu id = " + ((Menu) objects[0]).getId() + ", menu name: " + ((Menu) objects[0]).getName() +", order count: " + (Long) objects[1]);
+            bestMenuList.add(new BestMenusResponseDto((Menu) objects[0], (Long) objects[1]));
+        }
+
+        return bestMenuList;
+    }
 }
