@@ -21,5 +21,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			" GROUP BY o.customer" +
 			" ORDER BY COUNT(o.customer) DESC" +
 			" LIMIT 5")
-	List<Object[]> test(Store store);
+	List<Object[]> getVipAndOrderCountList(Store store);
 }

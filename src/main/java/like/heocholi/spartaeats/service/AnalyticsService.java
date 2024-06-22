@@ -22,11 +22,11 @@ public class AnalyticsService {
     public List<VipResponseDto> getVipList(Long storeId, Manager manager) {
         Store store = storeService.findStore(storeId, manager);
 
-        List<Object[]> test = orderRepository.test(store);
+        List<Object[]> vipAndOrderCountList = orderRepository.getVipAndOrderCountList(store);
 
         List<VipResponseDto> responseDtoList = new ArrayList<>();
 
-        for (Object[] objects : test) {
+        for (Object[] objects : vipAndOrderCountList) {
             System.out.println("customerId = " + ((Customer) objects[0]).getUserId() + ", order count: " + objects[1]);
             responseDtoList.add(new VipResponseDto((Customer) objects[0], (Long) objects[1]));
         }
