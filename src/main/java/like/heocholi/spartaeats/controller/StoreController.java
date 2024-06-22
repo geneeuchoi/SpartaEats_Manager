@@ -43,12 +43,12 @@ public class StoreController {
         List<StoreResponseDto> responseDtoList = storeService.readAllStore(userDetails);
 
         ResponseMessage<List<StoreResponseDto>> responseMessage = ResponseMessage.<List<StoreResponseDto>>builder()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .message("모든 가게 정보를 성공적으로 불러왔습니다.")
                 .data(responseDtoList)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
 
@@ -58,12 +58,12 @@ public class StoreController {
         StoreResponseDto responseDto = storeService.readStore(userDetail, storeId);
 
         ResponseMessage<StoreResponseDto> responseMessage = ResponseMessage.<StoreResponseDto>builder()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .message("가게 정보를 성공적으로 불러왔습니다.")
                 .data(responseDto)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     // 음식점 수정
@@ -72,12 +72,12 @@ public class StoreController {
         StoreResponseDto responseDto = storeService.updateStore(requestDto, userDetails, storeId);
 
         ResponseMessage<StoreResponseDto> responseMessage = ResponseMessage.<StoreResponseDto>builder()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .message("가게 정보를 성공적으로 수정했습니다.")
                 .data(responseDto)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     // 음식점 삭제
@@ -86,12 +86,12 @@ public class StoreController {
         Long id = storeService.deleteStore(userDetails, storeId);
 
         ResponseMessage<Long> responseMessage = ResponseMessage.<Long>builder()
-                .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.OK.value())
                 .message("가게를 성공적으로 삭제했습니다.")
                 .data(id)
                 .build();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
 
     }
 }
