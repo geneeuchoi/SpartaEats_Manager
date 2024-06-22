@@ -31,7 +31,11 @@ public class Store extends Timestamped{
 	private RestaurantType type;
 
 	@OneToMany(mappedBy = "store", cascade = CascadeType.PERSIST)
-	List<Menu> menuList;
+	private List<Menu> menuList;
+
+	@OneToMany(mappedBy = "store")
+	private List<Pick> pickList;
+
 
 	@Builder
 	public Store(StoreRequestDto requestDto, Manager manager) {
