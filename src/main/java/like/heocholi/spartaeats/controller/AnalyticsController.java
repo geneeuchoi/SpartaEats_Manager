@@ -1,5 +1,6 @@
 package like.heocholi.spartaeats.controller;
 
+import like.heocholi.spartaeats.dto.CustomerResponseDTO;
 import like.heocholi.spartaeats.dto.ResponseMessage;
 import like.heocholi.spartaeats.security.UserDetailsImpl;
 import like.heocholi.spartaeats.service.AnalyticsService;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +33,22 @@ public class AnalyticsController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+    }
+
+    //찜하기 한 customer 리스트 보기
+    @GetMapping("/picks/customers")
+    public ResponseEntity<ResponseMessage<List<CustomerResponseDTO>>> getPickCustomers(@PathVariable Long storeId,
+                                                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        List<CustomerResponseDTO> responseDTO = analyticsService.getPickCustomers(storeId, userDetails.getManager());
+
+        ResponseMessage<List<CustomerResponseDTO>> responseMessage = ResponseMessage.<List<CustomerResponseDTO>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("찜하기 한 customer 리스트 조회가 완료되었습니다.")
+                .data(responseDTO)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+
     }
 }
