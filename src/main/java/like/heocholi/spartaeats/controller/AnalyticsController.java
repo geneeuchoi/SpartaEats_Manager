@@ -1,6 +1,7 @@
 package like.heocholi.spartaeats.controller;
 
 import like.heocholi.spartaeats.dto.BestMenusResponseDto;
+import like.heocholi.spartaeats.dto.DailyOrdersResponseDto;
 import like.heocholi.spartaeats.dto.ResponseMessage;
 import like.heocholi.spartaeats.dto.VipResponseDto;
 import like.heocholi.spartaeats.entity.Manager;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,5 +61,18 @@ public class AnalyticsController {
         return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
+    @GetMapping("/orders/count-by-date")
+    public ResponseEntity<ResponseMessage<List<DailyOrdersResponseDto>>> getOrdersByDate(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Manager manager = userDetails.getManager();
+        List<DailyOrdersResponseDto> ordersByDate = analyticsService.getOrdersByDate(storeId, manager);
+
+        ResponseMessage<List<DailyOrdersResponseDto>> responseMessage = ResponseMessage.<List<DailyOrdersResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("날짜별 주문 건수 조회 성공")
+                .data(ordersByDate)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+    }
 }
 

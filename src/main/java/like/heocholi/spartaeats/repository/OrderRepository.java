@@ -22,4 +22,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			" ORDER BY COUNT(o.customer) DESC" +
 			" LIMIT 5")
 	List<Object[]> getVipAndOrderCountList(Store store);
+
+
+	@Query(value = "SELECT " +
+			"DATE(o.createdAt), COUNT(o), SUM(o.totalPrice) " +
+			"FROM Order o " +
+			"WHERE o.store = :store " +
+			"GROUP BY DATE(o.createdAt)")
+	List<Object[]> findOrdersByDate(Store store);
 }
