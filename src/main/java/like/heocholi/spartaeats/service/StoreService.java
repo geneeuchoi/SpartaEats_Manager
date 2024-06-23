@@ -26,12 +26,18 @@ public class StoreService {
         Manager manager = userDetails.getManager();
         Store store = new Store(requestDto, manager);
         Store savedStore = storeRepository.save(store);
+
         return new StoreResponseDto(savedStore);
     }
 
     public List<StoreResponseDto> readAllStore(UserDetailsImpl userDetails) {
         Manager manager = userDetails.getManager();
         List<Store> storeList = storeRepository.findByManagerId(manager.getId());
+
+        if (storeList.isEmpty()) {
+            throw new StoreException(ErrorType.NOT_FOUND_STORES);
+        }
+
         return storeList.stream()
                 .map(StoreResponseDto::new)
                 .toList();
@@ -40,6 +46,7 @@ public class StoreService {
     public StoreResponseDto readStore(UserDetailsImpl userDetails, Long storeId) {
         Manager manager = userDetails.getManager();
         Store store = findStore(storeId, manager);
+
         return new StoreResponseDto(store);
     }
 
@@ -60,6 +67,7 @@ public class StoreService {
         Manager manager = userDetails.getManager();
         Store store = findStore(storeId, manager);
         storeRepository.delete(store);
+
         return store.getId();
     }
 
