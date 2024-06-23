@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -21,7 +22,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			" GROUP BY o.customer" +
 			" ORDER BY COUNT(o.customer) DESC" +
 			" LIMIT 5")
-	List<Object[]> getVipAndOrderCountList(Store store);
+	Optional<List<Object[]>> getVipAndOrderCountList(Store store);
 
 
 	@Query(value = "SELECT " +
@@ -29,5 +30,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 			"FROM Order o " +
 			"WHERE o.store = :store " +
 			"GROUP BY DATE(o.createdAt)")
-	List<Object[]> findOrdersByDate(Store store);
+	Optional<List<Object[]>> getDailySales(Store store);
 }

@@ -1,9 +1,11 @@
 package like.heocholi.spartaeats.service;
 
+import like.heocholi.spartaeats.constants.ErrorType;
 import like.heocholi.spartaeats.dto.BestMenusResponseDto;
 import like.heocholi.spartaeats.dto.DailyOrdersResponseDto;
 import like.heocholi.spartaeats.dto.VipResponseDto;
 import like.heocholi.spartaeats.entity.*;
+import like.heocholi.spartaeats.exception.AnalyticsException;
 import like.heocholi.spartaeats.repository.MenuRepository;
 import like.heocholi.spartaeats.repository.OrderMenuRepository;
 import like.heocholi.spartaeats.repository.OrderRepository;
@@ -26,10 +28,18 @@ public class AnalyticsService {
 
     private final StoreService storeService;
 
+    /**
+     * 가게의 VIP 고객 리스트 조회
+     * @param storeId 가게Id
+     * @param manager 매니저 정보
+     * @return (VIP 고객 ID, 주문량) 5개
+     */
     public List<VipResponseDto> getVipList(Long storeId, Manager manager) {
         Store store = storeService.findStore(storeId, manager);
-        // TODO: return Optional 걸고, Exception
-        List<Object[]> vipAndOrderCountList = orderRepository.getVipAndOrderCountList(store);
+
+        List<Object[]> vipAndOrderCountList = orderRepository.getVipAndOrderCountList(store).orElseThrow(
+                ()-> new AnalyticsException(ErrorType.NOT_FOUND_ORDER)
+        );
 
         List<VipResponseDto> responseDtoList = new ArrayList<>();
 
@@ -41,11 +51,18 @@ public class AnalyticsService {
         return responseDtoList;
     }
 
-
+    /**
+     * 인기메뉴 조회
+     * @param storeId 가게Id
+     * @param manager 매니저 정보
+     * @return (인기메뉴의 Id, 이름, 판매수) 5개
+     */
     public List<BestMenusResponseDto> getBestMenus(Long storeId, Manager manager){
         List<Menu> menuList = menuRepository.findAllByStoreId(storeId);
-        // TODO: return Optional 걸고, Exception
-        List<Object[]> bestMenus = orderMenuRepository.findBestMenus(menuList);
+
+        List<Object[]> bestMenus = orderMenuRepository.getBestMenus(menuList).orElseThrow(
+                ()-> new AnalyticsException(ErrorType.NOT_FOUND_MENUS)
+        );
 
         List<BestMenusResponseDto> bestMenuList = new ArrayList<>();
         for (Object[] objects : bestMenus) {
@@ -56,11 +73,18 @@ public class AnalyticsService {
         return bestMenuList;
     }
 
-
-    public List<DailyOrdersResponseDto> getOrdersByDate(Long storeId, Manager manager){
+    /**
+     * 가게의 날짜별 주문건수 조회
+     * @param storeId 가게Id
+     * @param manager 매니저 정보
+     * @return (날짜, 주문건수, 매출) 리스트
+     */
+    public List<DailyOrdersResponseDto> getDailySales(Long storeId, Manager manager){
         Store store = storeService.findStore(storeId, manager);
 
-        List<Object[]> ordersByDate = orderRepository.findOrdersByDate(store);
+        List<Object[]> ordersByDate = orderRepository.getDailySales(store).orElseThrow(
+                ()-> new AnalyticsException(ErrorType.NOT_FOUND_ORDER)
+        );;
 
         List<DailyOrdersResponseDto> dailyOrderList = new ArrayList<>();
 

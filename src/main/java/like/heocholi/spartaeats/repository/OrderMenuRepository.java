@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import like.heocholi.spartaeats.entity.OrderMenu;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OrderMenuRepository extends JpaRepository<OrderMenu, Long> {
@@ -19,5 +20,5 @@ public interface OrderMenuRepository extends JpaRepository<OrderMenu, Long> {
             " GROUP BY om.menu" +
             " ORDER BY SUM(om.count) DESC" +
             " LIMIT 5")
-    List<Object[]> findBestMenus(List<Menu> menuList);
+    Optional<List<Object[]>> getBestMenus(List<Menu> menuList);
 }
