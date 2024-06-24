@@ -25,13 +25,15 @@ public class StoreController {
     @PostMapping
     public ResponseEntity<ResponseMessage<StoreResponseDto>> createStore(@Valid @RequestBody StoreRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         StoreResponseDto responseDto = storeService.createStore(requestDto, userDetails);
-        return ResponseEntity.ok().body(
-                ResponseMessage.<StoreResponseDto>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .message("가게가 성공적으로 등록되었습니다.")
-                        .data(responseDto)
-                        .build()
-        );
+
+        ResponseMessage<StoreResponseDto> responseMessage = ResponseMessage.<StoreResponseDto>builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .message("가게가 성공적으로 등록되었습니다.")
+                .data(responseDto)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseMessage);
+
     }
 
 
@@ -39,51 +41,57 @@ public class StoreController {
     @GetMapping
     public ResponseEntity<ResponseMessage<List<StoreResponseDto>>> readAllStore(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<StoreResponseDto> responseDtoList = storeService.readAllStore(userDetails);
-        return ResponseEntity.ok().body(
-                ResponseMessage.<List<StoreResponseDto>>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .message("모든 가게 정보를 성공적으로 불러왔습니다.")
-                        .data(responseDtoList)
-                        .build()
-        );    }
+
+        ResponseMessage<List<StoreResponseDto>> responseMessage = ResponseMessage.<List<StoreResponseDto>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("모든 가게 정보를 성공적으로 불러왔습니다.")
+                .data(responseDtoList)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+    }
 
 
     // 사용자의 특정 음식점 정보 보기
     @GetMapping("/{storeId}")
     public ResponseEntity<ResponseMessage<StoreResponseDto>> readStore(@AuthenticationPrincipal UserDetailsImpl userDetail, @PathVariable Long storeId) {
         StoreResponseDto responseDto = storeService.readStore(userDetail, storeId);
-        return ResponseEntity.ok().body(
-                ResponseMessage.<StoreResponseDto>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .message("가게 정보를 성공적으로 불러왔습니다.")
-                        .data(responseDto)
-                        .build()
-        );
+
+        ResponseMessage<StoreResponseDto> responseMessage = ResponseMessage.<StoreResponseDto>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("가게 정보를 성공적으로 불러왔습니다.")
+                .data(responseDto)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     // 음식점 수정
     @PutMapping("/{storeId}")
     public ResponseEntity<ResponseMessage<StoreResponseDto>> updateStore(@Valid @RequestBody StoreRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId) {
         StoreResponseDto responseDto = storeService.updateStore(requestDto, userDetails, storeId);
-        return ResponseEntity.ok().body(
-                ResponseMessage.<StoreResponseDto>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .message("가게 정보를 성공적으로 수정했습니다.")
-                        .data(responseDto)
-                        .build()
-        );
+
+        ResponseMessage<StoreResponseDto> responseMessage = ResponseMessage.<StoreResponseDto>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("가게 정보를 성공적으로 수정했습니다.")
+                .data(responseDto)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
     }
 
     // 음식점 삭제
     @DeleteMapping("/{storeId}")
     public ResponseEntity<ResponseMessage<Long>> deleteStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId) {
         Long id = storeService.deleteStore(userDetails, storeId);
-        return ResponseEntity.ok().body(
-                ResponseMessage.<Long>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .message("가게를 성공적으로 삭제했습니다.")
-                        .data(id)
-                        .build()
-        );
+
+        ResponseMessage<Long> responseMessage = ResponseMessage.<Long>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("가게를 성공적으로 삭제했습니다.")
+                .data(id)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseMessage);
+
     }
 }
