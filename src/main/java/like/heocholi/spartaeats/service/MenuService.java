@@ -109,4 +109,8 @@ public class MenuService {
         }
     }
 
+    // 가게의 메뉴 리스트 조회
+    public List<Menu> findAllByStoreId(Long storeId){
+        return menuRepository.findAllByStoreId(storeId);
+    }
 }
