@@ -36,7 +36,7 @@ public class ReviewService {
         List<ReviewResponseDto> reviewList = getReviewList(storeId,manager);
 
         return reviewList.stream()
-                .sorted(Comparator.comparing(ReviewResponseDto::getLikeCount)
+                .sorted(Comparator.comparing(ReviewResponseDto::getLikeCount).reversed()
                         .thenComparing(Comparator.comparing(ReviewResponseDto::getCreatedAt).reversed()))
                 .collect(Collectors.toList());
     }
