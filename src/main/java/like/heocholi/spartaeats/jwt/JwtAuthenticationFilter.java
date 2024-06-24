@@ -2,6 +2,13 @@ package like.heocholi.spartaeats.jwt;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import like.heocholi.spartaeats.constants.ErrorType;
+import like.heocholi.spartaeats.constants.UserStatus;
+import like.heocholi.spartaeats.dto.ErrorMessage;
+import like.heocholi.spartaeats.dto.ResponseMessage;
+import like.heocholi.spartaeats.exception.ManagerException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -50,9 +57,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     // 로그인 성공시 처리
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-        // TODO: Manager 상태가 탈퇴인지 아닌지 체크
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         Manager manager = ((UserDetailsImpl) authResult.getPrincipal()).getManager();
+        if(manager.getUserStatus().equals(UserStatus.DEACTIVATE)){
+            throw new ManagerException(ErrorType.NOT_FOUND_USER);
+        }
+
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRole role = ((UserDetailsImpl) authResult.getPrincipal()).getManager().getRole();
 
@@ -65,13 +75,29 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader(JwtUtil.AUTH_ACCESS_HEADER, accessToken);
         response.addHeader(JwtUtil.AUTH_REFRESH_HEADER, refreshToken);
 
-        // TODO: 로그인 성공 response?
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseMessage.<String>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("로그인 성공")
+                .data(username)
+                .build())
+        );
+        response.getWriter().flush();
     }
 
     // 로그인 실패시 처리
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        // TODO: 로그인 실패 response 추가?
-        response.setStatus(401);
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        ErrorType errorType = ErrorType.NOT_FOUND_AUTHENTICATION_INFO;
+        response.setStatus(errorType.getHttpStatus().value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(ErrorMessage.<String>builder()
+                .statusCode(errorType.getHttpStatus().value())
+                .message(errorType.getMessage())
+                .build())
+        );
+        response.getWriter().flush();
     }
 }
