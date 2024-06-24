@@ -1,10 +1,10 @@
-package like.heocholi.spartaeats.dto.menu;
+package like.heocholi.spartaeats.dto;
 
 
 import lombok.Getter;
 
 @Getter
-public class MenuUpdateRequestDto {
+public class MenuAddRequestDto {
 
     private String name;
     private int price;
