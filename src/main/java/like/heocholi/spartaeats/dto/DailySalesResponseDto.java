@@ -5,12 +5,12 @@ import lombok.Getter;
 import java.util.Date;
 
 @Getter
-public class DailyOrdersResponseDto {
+public class DailySalesResponseDto {
     private Date date;
     private Long orderCount;
     private Long sales;
 
-    public DailyOrdersResponseDto(Date date, Long orderCount, Long sales) {
+    public DailySalesResponseDto(Date date, Long orderCount, Long sales) {
         this.date = date;
         this.orderCount = orderCount;
         this.sales = sales;

@@ -1,5 +1,6 @@
 package like.heocholi.spartaeats.repository;
 
+import like.heocholi.spartaeats.dto.BestMenusResponseDto;
 import like.heocholi.spartaeats.entity.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,11 +15,11 @@ import java.util.Optional;
 public interface OrderMenuRepository extends JpaRepository<OrderMenu, Long> {
 
     @Query(value = "SELECT " +
-            "om.menu, SUM(om.count) "+
+            "new like.heocholi.spartaeats.dto.BestMenusResponseDto(om.menu, SUM(om.count))"+
             " FROM OrderMenu om" +
             " WHERE om.menu IN :menuList" +
             " GROUP BY om.menu" +
             " ORDER BY SUM(om.count) DESC" +
             " LIMIT 5")
-    Optional<List<Object[]>> getBestMenus(List<Menu> menuList);
+    Optional<List<BestMenusResponseDto>> getBestMenus(List<Menu> menuList);
 }

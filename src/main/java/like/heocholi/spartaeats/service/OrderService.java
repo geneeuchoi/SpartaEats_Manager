@@ -1,5 +1,7 @@
 package like.heocholi.spartaeats.service;
 
+import like.heocholi.spartaeats.dto.*;
+import like.heocholi.spartaeats.exception.AnalyticsException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,10 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import like.heocholi.spartaeats.constants.ErrorType;
-import like.heocholi.spartaeats.dto.OrderListResponseDTO;
-import like.heocholi.spartaeats.dto.OrderResponseDTO;
-import like.heocholi.spartaeats.dto.OrderStateRequestDTO;
-import like.heocholi.spartaeats.dto.OrderStateResponseDTO;
 import like.heocholi.spartaeats.entity.Manager;
 import like.heocholi.spartaeats.entity.Order;
 import like.heocholi.spartaeats.entity.Store;
@@ -19,6 +17,8 @@ import like.heocholi.spartaeats.exception.OrderException;
 import like.heocholi.spartaeats.exception.PageException;
 import like.heocholi.spartaeats.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -87,5 +87,19 @@ public class OrderService {
 	//주문 조회
 	private Order getOrder(Long orderId) {
 		return orderRepository.findById(orderId).orElseThrow(() -> new OrderException(ErrorType.NOT_FOUND_ORDER));
+	}
+
+	// vip 고객 조회
+	public List<VipResponseDto> getVipList(Store store) {
+		return orderRepository.getVips(store).orElseThrow(
+				() -> new AnalyticsException(ErrorType.NOT_FOUND_ORDER)
+		);
+	}
+
+	// 날짜별 판매량 조회
+	public List<DailySalesResponseDto> getDailySales(Store store){
+		return orderRepository.getDailySales(store).orElseThrow(
+				()-> new AnalyticsException(ErrorType.NOT_FOUND_ORDER)
+		);
 	}
 }

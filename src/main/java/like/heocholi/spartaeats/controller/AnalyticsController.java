@@ -1,7 +1,7 @@
 package like.heocholi.spartaeats.controller;
 
 import like.heocholi.spartaeats.dto.BestMenusResponseDto;
-import like.heocholi.spartaeats.dto.DailyOrdersResponseDto;
+import like.heocholi.spartaeats.dto.DailySalesResponseDto;
 import like.heocholi.spartaeats.dto.ResponseMessage;
 import like.heocholi.spartaeats.dto.VipResponseDto;
 import like.heocholi.spartaeats.entity.Manager;
@@ -73,11 +73,11 @@ public class AnalyticsController {
      * @return 날짜별 주문 건수 및 매출 리스트
      */
     @GetMapping("/orders/count-by-date")
-    public ResponseEntity<ResponseMessage<List<DailyOrdersResponseDto>>> getOrdersByDate(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseMessage<List<DailySalesResponseDto>>> getOrdersByDate(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Manager manager = userDetails.getManager();
-        List<DailyOrdersResponseDto> ordersByDate = analyticsService.getDailySales(storeId, manager);
+        List<DailySalesResponseDto> ordersByDate = analyticsService.getDailySales(storeId, manager);
 
-        ResponseMessage<List<DailyOrdersResponseDto>> responseMessage = ResponseMessage.<List<DailyOrdersResponseDto>>builder()
+        ResponseMessage<List<DailySalesResponseDto>> responseMessage = ResponseMessage.<List<DailySalesResponseDto>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("날짜별 주문 건수 조회 성공")
                 .data(ordersByDate)

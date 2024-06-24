@@ -1,5 +1,7 @@
 package like.heocholi.spartaeats.repository;
 
+import like.heocholi.spartaeats.dto.DailySalesResponseDto;
+import like.heocholi.spartaeats.dto.VipResponseDto;
 import like.heocholi.spartaeats.entity.Order;
 import like.heocholi.spartaeats.entity.Store;
 import org.springframework.data.domain.Page;
@@ -16,19 +18,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	Page<Order> findAllByStore(Store store, Pageable pageable);
 
 	@Query(value = "SELECT " +
-			"o.customer, COUNT(o.customer)"+
+			"new like.heocholi.spartaeats.dto.VipResponseDto(o.customer, COUNT(o.customer))"+
 			" FROM Order o" +
 			" WHERE o.store = :store" +
 			" GROUP BY o.customer" +
 			" ORDER BY COUNT(o.customer) DESC" +
 			" LIMIT 5")
-	Optional<List<Object[]>> getVipAndOrderCountList(Store store);
+	Optional<List<VipResponseDto>> getVips(Store store);
 
 
 	@Query(value = "SELECT " +
-			"DATE(o.createdAt), COUNT(o), SUM(o.totalPrice) " +
+			"new like.heocholi.spartaeats.dto.DailySalesResponseDto(DATE(o.createdAt), COUNT(o), SUM(o.totalPrice)) " +
 			"FROM Order o " +
 			"WHERE o.store = :store " +
 			"GROUP BY DATE(o.createdAt)")
-	Optional<List<Object[]>> getDailySales(Store store);
+	Optional<List<DailySalesResponseDto>> getDailySales(Store store);
 }
