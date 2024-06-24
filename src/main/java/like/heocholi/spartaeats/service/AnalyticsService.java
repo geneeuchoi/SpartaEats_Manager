@@ -1,22 +1,21 @@
 package like.heocholi.spartaeats.service;
 
-import like.heocholi.spartaeats.dto.CustomerResponseDTO;
-import like.heocholi.spartaeats.entity.Customer;
-import like.heocholi.spartaeats.entity.Pick;
-import like.heocholi.spartaeats.dto.BestMenusResponseDto;
-import like.heocholi.spartaeats.dto.DailySalesResponseDto;
-import like.heocholi.spartaeats.dto.VipResponseDto;
-import like.heocholi.spartaeats.entity.Manager;
-import like.heocholi.spartaeats.entity.Menu;
-import like.heocholi.spartaeats.entity.Store;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import java.util.List;
+import like.heocholi.spartaeats.dto.BestMenusResponseDto;
+import like.heocholi.spartaeats.dto.CustomerResponseDTO;
+import like.heocholi.spartaeats.dto.DailySalesResponseDto;
+import like.heocholi.spartaeats.dto.VipResponseDto;
+import like.heocholi.spartaeats.entity.Customer;
+import like.heocholi.spartaeats.entity.Manager;
+import like.heocholi.spartaeats.entity.Menu;
+import like.heocholi.spartaeats.entity.Pick;
+import like.heocholi.spartaeats.entity.Store;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,7 +26,6 @@ public class AnalyticsService {
     private final OrderService orderService;
     private final OrderMenuService orderMenuService;
     private final MenuService menuService;
-    private final StoreService storeService;
 
 
     //가게별 찜하기 수 보기

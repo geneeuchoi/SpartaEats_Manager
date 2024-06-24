@@ -22,9 +22,7 @@ public enum ErrorType {
     NOT_FOUND_MENUS(HttpStatus.NOT_FOUND,"메뉴가 없습니다."),
     NOT_FOUND_MENU(HttpStatus.NOT_FOUND,"해당 메뉴가 존재하지 않습니다."),
     NOT_EQUAL_MANAGER(HttpStatus.FORBIDDEN,"해당 음식점의 매니저만 접근할 수 있습니다."),
-
-
-
+    
     // JWT
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 리프레시 토큰입니다. 다시 로그인 해주세요."),
     NOT_FOUND_AUTHENTICATION_INFO(HttpStatus.NOT_FOUND, "인증 정보를 찾을 수 없습니다."),
@@ -37,6 +35,7 @@ public enum ErrorType {
     INVALID_ORDER_STORE(HttpStatus.BAD_REQUEST, "본인의 가게 주문만 조회할 수 있습니다."),
     
     // store
+    NOT_FOUND_STORE(HttpStatus.NOT_FOUND, "해당 음식점이 존재하지 않습니다."),
     NOT_FOUND_STORES(HttpStatus.NOT_FOUND,"등록된 음식점이 없습니다."),
     
     // page
