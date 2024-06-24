@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class ReviewService {
         List<ReviewResponseDto> reviewList = getReviewList(storeId,manager);
 
         return reviewList.stream()
-                .sorted((r1, r2) -> r1.getCreatedAt().compareTo(r2.getCreatedAt()))
+                .sorted((r2, r1) -> r1.getCreatedAt().compareTo(r2.getCreatedAt()))
                 .collect(Collectors.toList());
     }
 
@@ -35,7 +36,8 @@ public class ReviewService {
         List<ReviewResponseDto> reviewList = getReviewList(storeId,manager);
 
         return reviewList.stream()
-                .sorted((r1, r2) -> Integer.compare(r1.getLikeCount(), r2.getLikeCount()))
+                .sorted(Comparator.comparing(ReviewResponseDto::getLikeCount)
+                        .thenComparing(Comparator.comparing(ReviewResponseDto::getCreatedAt).reversed()))
                 .collect(Collectors.toList());
     }
 

@@ -42,9 +42,10 @@ public class ReviewController {
 
     //리뷰 조회
     @GetMapping("/stores/{storeId}/reviews/like")
-    public ResponseEntity<ResponseMessage<List<ReviewResponseDto>>> getReviewSortLike(@PathVariable Long storeId) {
+    public ResponseEntity<ResponseMessage<List<ReviewResponseDto>>> getReviewSortLike(@PathVariable Long storeId,
+                                                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        List<ReviewResponseDto> reviewList = reviewService.getReviewSortLike(storeId);
+        List<ReviewResponseDto> reviewList = reviewService.getReviewSortLike(storeId,userDetails.getManager());
 
         ResponseMessage<List<ReviewResponseDto>> responseMessage = ResponseMessage.<List<ReviewResponseDto>>builder()
                 .statusCode(HttpStatus.CREATED.value())
