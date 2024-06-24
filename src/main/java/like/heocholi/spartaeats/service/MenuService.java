@@ -5,9 +5,9 @@ import java.util.List;
 import like.heocholi.spartaeats.constants.ErrorType;
 import org.springframework.stereotype.Service;
 
-import like.heocholi.spartaeats.dto.menu.MenuAddRequestDto;
-import like.heocholi.spartaeats.dto.menu.MenuResponseDto;
-import like.heocholi.spartaeats.dto.menu.MenuUpdateRequestDto;
+import like.heocholi.spartaeats.dto.MenuAddRequestDto;
+import like.heocholi.spartaeats.dto.MenuResponseDto;
+import like.heocholi.spartaeats.dto.MenuUpdateRequestDto;
 import like.heocholi.spartaeats.entity.Manager;
 import like.heocholi.spartaeats.entity.Menu;
 import like.heocholi.spartaeats.entity.Store;

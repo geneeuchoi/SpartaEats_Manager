@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import like.heocholi.spartaeats.dto.ResponseMessage;
-import like.heocholi.spartaeats.dto.menu.MenuAddRequestDto;
-import like.heocholi.spartaeats.dto.menu.MenuResponseDto;
-import like.heocholi.spartaeats.dto.menu.MenuUpdateRequestDto;
+import like.heocholi.spartaeats.dto.MenuAddRequestDto;
+import like.heocholi.spartaeats.dto.MenuResponseDto;
+import like.heocholi.spartaeats.dto.MenuUpdateRequestDto;
 import like.heocholi.spartaeats.security.UserDetailsImpl;
 import like.heocholi.spartaeats.service.MenuService;
 import lombok.RequiredArgsConstructor;

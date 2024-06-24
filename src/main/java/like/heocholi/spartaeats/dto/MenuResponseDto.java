@@ -1,4 +1,4 @@
-package like.heocholi.spartaeats.dto.menu;
+package like.heocholi.spartaeats.dto;
 
 import like.heocholi.spartaeats.entity.Menu;
 import lombok.Getter;

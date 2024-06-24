@@ -73,7 +73,7 @@ public class StoreService {
 
     public Store findStore(Long storeId, Manager manager) {
         return storeRepository.findByIdAndManagerId(storeId, manager.getId())
-                .orElseThrow(()-> new StoreException(ErrorType.NOT_FOUND_STORE));
+                .orElseThrow(()-> new StoreException(ErrorType.NOT_FOUND_STORES));
     }
 
 
